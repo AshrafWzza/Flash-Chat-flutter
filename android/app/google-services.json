@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "920166241207",
+    "project_id": "flash-chat-982eb",
+    "storage_bucket": "flash-chat-982eb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:920166241207:android:82fa13c8697845faad4e32",
+        "android_client_info": {
+          "package_name": "website.wzza.flash_chat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "920166241207-ljj1gu1scv15kj1g1eq5c2ggrpqdok45.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDFF0bfKN0iKJ-2gS0QvtOiccFq7xSiC84"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "920166241207-ljj1gu1scv15kj1g1eq5c2ggrpqdok45.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
