@@ -10,6 +10,8 @@ User? loggedInUser; //FirebaseUser depricated -> User
 
 class ChatScreen extends StatefulWidget {
   static const String id = 'chat_screen';
+
+  const ChatScreen({Key? key}) : super(key: key);
   @override
   _ChatScreenState createState() => _ChatScreenState();
 }
@@ -47,13 +49,13 @@ class _ChatScreenState extends State<ChatScreen> {
         leading: null,
         actions: <Widget>[
           IconButton(
-              icon: Icon(Icons.close),
+              icon: const Icon(Icons.close),
               onPressed: () {
                 //_auth.signOut();
                 Navigator.pop(context);
               }),
         ],
-        title: Text('⚡️Chat'),
+        title: const Text('⚡️Chat'),
         backgroundColor: Colors.lightBlueAccent,
       ),
       body: SafeArea(
@@ -85,7 +87,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         'timestamp': FieldValue.serverTimestamp(),
                       });
                     },
-                    child: Text(
+                    child: const Text(
                       'Send',
                       style: kSendButtonTextStyle,
                     ),
@@ -115,11 +117,11 @@ class MessageStream extends StatelessWidget {
       stream: _chatStream,
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasError) {
-          return Text('Something went wrong');
+          return const Text('Something went wrong');
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
+          return const Center(
             child: CircularProgressIndicator(
               backgroundColor: Colors.lightBlueAccent,
             ), // CircularProgress Indicator
@@ -149,18 +151,20 @@ class BubbleMessage extends StatelessWidget {
   final String sender;
   final String text;
   bool isMe;
-  BubbleMessage({required this.sender, required this.text, required this.isMe});
+  BubbleMessage(
+      {Key? key, required this.sender, required this.text, required this.isMe})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(10.0),
+      padding: const EdgeInsets.all(10.0),
       child: Column(
         crossAxisAlignment:
             isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: [
           Text(
             sender,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 12.0,
               color: Colors.black54,
             ),
@@ -170,10 +174,11 @@ class BubbleMessage extends StatelessWidget {
             elevation: 5.0,
             color: isMe ? Colors.lightBlueAccent : Colors.grey, //if Sender
             child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+              padding:
+                  const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
               child: Text(
                 text,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.white,
                   fontSize: 15.0,
                 ), // TextStyle

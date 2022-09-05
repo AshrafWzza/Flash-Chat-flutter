@@ -11,10 +11,12 @@ void main() async {
   // Initialize Firebase
   await Firebase.initializeApp();
   //
-  runApp(FlashChat());
+  runApp(const FlashChat());
 }
 
 class FlashChat extends StatelessWidget {
+  const FlashChat({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -27,10 +29,10 @@ class FlashChat extends StatelessWidget {
       // ),
       initialRoute: WelcomeScreen.id,
       routes: {
-        WelcomeScreen.id: (context) => WelcomeScreen(),
-        LoginScreen.id: (context) => LoginScreen(),
-        RegistrationScreen.id: (context) => RegistrationScreen(),
-        ChatScreen.id: (context) => ChatScreen(),
+        WelcomeScreen.id: (context) => const WelcomeScreen(),
+        LoginScreen.id: (context) => const LoginScreen(),
+        RegistrationScreen.id: (context) => const RegistrationScreen(),
+        ChatScreen.id: (context) => const ChatScreen(),
       },
     );
   }
