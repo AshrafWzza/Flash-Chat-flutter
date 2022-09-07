@@ -10,10 +10,10 @@ A new Flutter project.
 - [animated_text_kit Package](https://pub.dev/packages/animated_text_kit)
 - [modal_progress_hud_nsn Package](https://pub.dev/packages/modal_progress_hud_nsn)
 ### ToDo
-- [ ] Auto Scroll to new message
-- [x] Make Button Not respect CrossAxisAlignment.stretch
-- [ ] make ⚡ icon spinning when startup
+- [x] Auto Scroll to new message
+- [ ] Make Button Not respect CrossAxisAlignment.stretch
+- [x] make ⚡ icon spinning when startup
 - [ ] Dark Theme
-- [x] Make other rooms
-- [x] Make private chat
+- [ ] Make other rooms
+- [ ] Make private chat
 
