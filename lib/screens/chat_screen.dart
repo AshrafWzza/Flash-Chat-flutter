@@ -4,8 +4,6 @@ import 'package:flash_chat/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-//Todo: spinner while waiting is overflowing up ->fix it
-//Todo: automatically scrollDown to new message
 final _auth = FirebaseAuth.instance; //to get current user
 User? loggedInUser; //FirebaseUser depricated -> User
 //Auto Scroll to the new message
@@ -54,7 +52,9 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: null,
+        automaticallyImplyLeading: false,
+        //leading: null,
+        centerTitle: true,
         actions: <Widget>[
           IconButton(
               icon: const Icon(Icons.close),
@@ -136,10 +136,13 @@ class MessageStream extends StatelessWidget {
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(
-            child: CircularProgressIndicator(
-              backgroundColor: Colors.lightBlueAccent,
-            ), // CircularProgress Indicator
+          return const Padding(
+            padding: EdgeInsets.all(18.0),
+            child: Center(
+              child: CircularProgressIndicator(
+                backgroundColor: Colors.lightBlueAccent,
+              ), // CircularProgress Indicator
+            ),
           ); // Center
         }
         return Expanded(

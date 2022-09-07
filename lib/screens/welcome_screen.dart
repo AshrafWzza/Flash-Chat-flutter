@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flash_chat/components/rounded_button.dart';
 
-//Todo:AnimatedTextKit repetition numbers
 class WelcomeScreen extends StatefulWidget {
   static const String id = 'welcome_screen';
 
@@ -88,7 +87,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                       ),
                     ),
                   ],
-                  totalRepeatCount: 3,
+                  totalRepeatCount: 2,
                   pause: const Duration(milliseconds: 1000),
                   displayFullTextOnTap: true,
                   stopPauseOnTap: true,
