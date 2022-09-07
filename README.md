@@ -13,6 +13,7 @@ A new Flutter project.
 - [ ] Auto Scroll to new message
 - [x] Make Button Not respect CrossAxisAlignment.stretch
 - [ ] make ⚡ icon spinning when startup
+- [ ] Dark Theme
 - [x] Make other rooms
 - [x] Make private chat
 
