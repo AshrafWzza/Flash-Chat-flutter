@@ -28,6 +28,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
     animation =
         ColorTween(begin: Colors.grey, end: Colors.white).animate(controller!);
     controller!.forward();
+
     //Go and Back  repetition
     // animation?.addStatusListener((status) {
     //   if (status == AnimationStatus.completed) { //End
@@ -63,11 +64,17 @@ class _WelcomeScreenState extends State<WelcomeScreen>
           children: <Widget>[
             Row(
               children: <Widget>[
-                Hero(
-                  tag: 'logo',
-                  child: SizedBox(
-                    child: Image.asset('images/logo.png'),
-                    height: 60.0,
+                //Rotate logo
+                AnimatedRotation(
+                  turns: controller!.value.toDouble(),
+                  curve: Curves.elasticInOut,
+                  duration: const Duration(seconds: 2),
+                  child: Hero(
+                    tag: 'logo',
+                    child: SizedBox(
+                      child: Image.asset('images/logo.png'),
+                      height: 60.0,
+                    ),
                   ),
                 ),
                 //animated_text_kit
