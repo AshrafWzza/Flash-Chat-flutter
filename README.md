@@ -12,6 +12,7 @@ A new Flutter project.
 ### ToDo
 - [ ] Auto Scroll to new message
 - [x] Make Button Not respect CrossAxisAlignment.stretch
+- [x] make ⚡ icon spinning when startup
 - [x] Make other rooms
 - [x] Make private chat
 
