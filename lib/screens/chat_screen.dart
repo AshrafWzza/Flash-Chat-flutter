@@ -1,3 +1,4 @@
+import 'package:flash_chat/components/show_alert_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flash_chat/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,6 +8,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 //Todo: automatically scrollDown to new message
 final _auth = FirebaseAuth.instance; //to get current user
 User? loggedInUser; //FirebaseUser depricated -> User
+//Auto Scroll to the new message
+final ScrollController scrollController = ScrollController();
 
 class ChatScreen extends StatefulWidget {
   static const String id = 'chat_screen';
@@ -17,7 +20,7 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  final messageTextContoller =
+  final messageTextController =
       TextEditingController(); //TextField clear after sending
   final _firestore =
       FirebaseFirestore.instance; //XX Firestore.instance //to add data
@@ -34,12 +37,17 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   void getCurrentUser() async {
-    final user = await _auth.currentUser!; //return currentuser if exist
+    final user = _auth.currentUser!; //return currentuser if exist
     // currentUser() -> currentUser!
-    if (user != null) {
-      loggedInUser = user;
-      print(loggedInUser?.email);
-    }
+    loggedInUser = user;
+    print(loggedInUser?.email);
+  }
+
+  Future<void> signingOut(BuildContext context) async {
+    await showAlertDialog(context,
+        title: 'logOut', content: 'Are You sure?', defaultActionText: 'yes');
+    await _auth.signOut();
+    Navigator.pop(context);
   }
 
   @override
@@ -50,9 +58,8 @@ class _ChatScreenState extends State<ChatScreen> {
         actions: <Widget>[
           IconButton(
               icon: const Icon(Icons.close),
-              onPressed: () {
-                //_auth.signOut();
-                Navigator.pop(context);
+              onPressed: () async {
+                await signingOut(context);
               }),
         ],
         title: const Text('⚡️Chat'),
@@ -71,7 +78,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 children: <Widget>[
                   Expanded(
                     child: TextField(
-                      controller: messageTextContoller,
+                      controller: messageTextController,
                       onChanged: (value) {
                         messageText = value;
                       },
@@ -80,12 +87,20 @@ class _ChatScreenState extends State<ChatScreen> {
                   ),
                   TextButton(
                     onPressed: () {
-                      messageTextContoller.clear();
+                      messageTextController.clear();
                       _firestore.collection('messages').add({
                         'text': messageText,
                         'sender': loggedInUser?.email,
                         'timestamp': FieldValue.serverTimestamp(),
                       });
+                      //Auto Scroll to the new message
+                      scrollController.animateTo(
+                        // 1.0
+                        //0.0
+                        scrollController.position.maxScrollExtent,
+                        curve: Curves.easeOut,
+                        duration: const Duration(milliseconds: 300),
+                      );
                     },
                     child: const Text(
                       'Send',
@@ -130,6 +145,7 @@ class MessageStream extends StatelessWidget {
         return Expanded(
           //Error:must wrap it with Expanded --> Crash App
           child: ListView(
+            controller: scrollController, //Auto Scroll to the new message
             children: snapshot.data!.docs.map((DocumentSnapshot document) {
               Map<String, dynamic> data =
                   document.data()! as Map<String, dynamic>;
