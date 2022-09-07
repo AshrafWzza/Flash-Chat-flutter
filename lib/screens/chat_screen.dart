@@ -71,45 +71,54 @@ class _ChatScreenState extends State<ChatScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             MessageStream(chatStream: _chatStream),
-            Container(
-              decoration: kMessageContainerDecoration,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Expanded(
-                    child: TextField(
-                      controller: messageTextController,
-                      onChanged: (value) {
-                        messageText = value;
-                      },
-                      decoration: kMessageTextFieldDecoration,
-                    ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                Container(
+                  decoration: kMessageContainerDecoration,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Expanded(
+                        child: TextField(
+                          controller: messageTextController,
+                          onChanged: (value) {
+                            messageText = value;
+                          },
+                          decoration: kMessageTextFieldDecoration,
+                        ),
+                      ),
+                      TextButton(
+                        //Mandatory async and await, without them the scrollController.position.maxScrollExtent scrolls down
+                        // before new message added so it scroll to the latestbefore not the latest
+                        onPressed: () async {
+                          messageTextController.clear();
+                          await _firestore.collection('messages').add({
+                            'text': messageText,
+                            'sender': loggedInUser?.email,
+                            'timestamp': FieldValue.serverTimestamp(),
+                          });
+                          //Auto Scroll to the new message
+                          setState(() {
+                            scrollController.animateTo(
+                              // 1.0
+                              //0.0
+                              scrollController.position.maxScrollExtent,
+                              curve: Curves.easeOut,
+                              duration: const Duration(milliseconds: 300),
+                            );
+                          });
+                        },
+                        child: const Text(
+                          'Send',
+                          style: kSendButtonTextStyle,
+                        ),
+                      ),
+                    ],
                   ),
-                  TextButton(
-                    onPressed: () {
-                      messageTextController.clear();
-                      _firestore.collection('messages').add({
-                        'text': messageText,
-                        'sender': loggedInUser?.email,
-                        'timestamp': FieldValue.serverTimestamp(),
-                      });
-                      //Auto Scroll to the new message
-                      scrollController.animateTo(
-                        // 1.0
-                        //0.0
-                        scrollController.position.maxScrollExtent,
-                        curve: Curves.easeOut,
-                        duration: const Duration(milliseconds: 300),
-                      );
-                    },
-                    child: const Text(
-                      'Send',
-                      style: kSendButtonTextStyle,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+                )
+              ],
+            )
           ],
         ),
       ),

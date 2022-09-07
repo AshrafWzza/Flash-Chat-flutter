@@ -4,7 +4,6 @@ import 'package:flash_chat/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flash_chat/screens/chat_screen.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
-
 import '../components/show_exception_alert_dialog.dart';
 
 class RegistrationScreen extends StatefulWidget {

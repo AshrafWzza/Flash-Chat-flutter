@@ -21,7 +21,6 @@ const kTextFieldDecoration = InputDecoration(
   hintText: ' ',
   labelText: '',
   contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-  //Search what is the difference between Border, EnabledBorder, FocusedBorder
   /*border: OutlineInputBorder(
     borderSide: BorderSide(color: Colors.red, width: 10.0),
     borderRadius: BorderRadius.all(Radius.circular(82.0)),
