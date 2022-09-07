@@ -6,7 +6,7 @@ A new Flutter project.
 ### Resource
 - firebase
 - Navigate with named routes
-- Animation(Hero,Tweet, Curved)
+- Animation(Hero,Tweet, Curved, AnimatedRotation, ScrollController)
 - [animated_text_kit Package](https://pub.dev/packages/animated_text_kit)
 - [modal_progress_hud_nsn Package](https://pub.dev/packages/modal_progress_hud_nsn)
 ### ToDo
