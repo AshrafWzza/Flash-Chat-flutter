@@ -21,29 +21,38 @@ class _WelcomeScreenState extends State<WelcomeScreen>
   @override
   void initState() {
     super.initState();
-    controller =
-        AnimationController(vsync: this, duration: const Duration(seconds: 1));
+    controller = AnimationController(
+        vsync: this, duration: const Duration(seconds: 1) /*upperBound:100.0*/);
     //animation = CurvedAnimation(parent: controller!, curve: Curves.easeIn);
+    // When you use CurvedAnimation , the upperBound can't be greater than 1.0
     animation =
         ColorTween(begin: Colors.grey, end: Colors.white).animate(controller!);
-    controller?.forward();
+    controller!.forward();
     //Go and Back  repetition
     // animation?.addStatusListener((status) {
-    //   if (status == AnimationStatus.completed) {
+    //   if (status == AnimationStatus.completed) { //End
     //     controller?.reverse(from: 1.0);
-    //   } else if (status == AnimationStatus.dismissed) {
+    //   } else if (status == AnimationStatus.dismissed) {//Beginning
     //     controller?.forward();
     //   }
     // });
-    controller?.addListener(() {
+    controller!.addListener(() {
       setState(() {});
+      //debugPrint(animation!.value);  //warning color not String
+      //debugPrint('${animation!.value}');
     });
+  }
+
+  @override
+  void dispose() {
+    controller?.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: (animation?.value),
+      backgroundColor: animation!.value,
       //backgroundColor: Colors.blueGrey.withOpacity((controller?.value)!),
       // (!) to fix error double? cant be assigned to double
       body: Padding(
@@ -72,7 +81,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                       ),
                     ),
                   ],
-                  totalRepeatCount: 4,
+                  totalRepeatCount: 3,
                   pause: const Duration(milliseconds: 1000),
                   displayFullTextOnTap: true,
                   stopPauseOnTap: true,

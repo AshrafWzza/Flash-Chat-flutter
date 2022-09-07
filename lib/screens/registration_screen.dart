@@ -5,6 +5,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flash_chat/screens/chat_screen.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
+import '../components/show_exception_alert_dialog.dart';
+
 class RegistrationScreen extends StatefulWidget {
   static const String id = 'registration_screen';
 
@@ -17,13 +19,13 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   final _auth = FirebaseAuth.instance;
   String? email;
   String? password;
-  bool showSpinner = false;
+  bool isLoading = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       body: ModalProgressHUD(
-        inAsyncCall: showSpinner,
+        inAsyncCall: isLoading,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child: Column(
@@ -49,7 +51,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   email = value;
                 },
                 decoration: kTextFieldDecoration.copyWith(
-                    hintText: 'Enter your email.'),
+                    hintText: 'Enter your email.', labelText: 'Email'),
               ),
               const SizedBox(
                 height: 8.0,
@@ -61,7 +63,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   password = value;
                 },
                 decoration: kTextFieldDecoration.copyWith(
-                    hintText: 'Enter your Password.'),
+                    hintText: 'Enter your Password.', labelText: 'Password'),
               ),
               const SizedBox(
                 height: 24.0,
@@ -70,7 +72,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   color: Colors.blueAccent,
                   onPressed: () async {
                     setState(() {
-                      showSpinner = true;
+                      isLoading = true;
                     }); //start spinner
                     try {
                       final newUser =
@@ -80,10 +82,14 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         Navigator.pushNamed(context, ChatScreen.id);
                       }
                       setState(() {
-                        showSpinner = false;
+                        isLoading = false;
                       }); //end spinner
-                    } catch (e) {
-                      print(e);
+                    } on FirebaseException catch (e) {
+                      showExceptionAlertDialog(context,
+                          title: 'Error', exception: e);
+                      setState(() {
+                        isLoading = false;
+                      });
                     }
                   },
                   textButton: 'Register'),
