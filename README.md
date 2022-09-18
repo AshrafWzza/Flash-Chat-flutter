@@ -4,7 +4,8 @@ A new Flutter project.
 
 ## Getting Started
 ### Resource
-- firebase
+- Firebase
+- StreamBuilder
 - Navigate with named routes
 - Animation(Hero,Tweet, Curved, AnimatedRotation, ScrollController)
 - [animated_text_kit Package](https://pub.dev/packages/animated_text_kit)
