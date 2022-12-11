@@ -23,12 +23,7 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   final messageTextController =
       TextEditingController(); //TextField clear after sending
-  final _firestore =
-      FirebaseFirestore.instance; //XX Firestore.instance //to add data
-  final Stream<QuerySnapshot> _chatStream = FirebaseFirestore.instance
-      .collection('messages')
-      .orderBy('timestamp')
-      .snapshots(); //to get snapshot collection
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
