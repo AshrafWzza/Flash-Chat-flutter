@@ -1,9 +1,13 @@
+import 'package:flash_chat/cubits/chat_cubit/chat_cubit.dart';
+import 'package:flash_chat/cubits/login_cubit/login_cubit.dart';
+import 'package:flash_chat/cubits/register_cubit/register_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flash_chat/screens/welcome_screen.dart';
 import 'package:flash_chat/screens/login_screen.dart';
 import 'package:flash_chat/screens/registration_screen.dart';
 import 'package:flash_chat/screens/chat_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() async {
   // Ensure that Firebase is initialized
@@ -19,22 +23,35 @@ class FlashChat extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      // theme: ThemeData.dark().copyWith(
-      //   textTheme: TextTheme(
-      //     ////////body1: TextStyle(color: Colors.black54), -->body1 deprecated
-      //     bodyText1: TextStyle(color: Colors.black54),
-      //     bodyText2: TextStyle(color: Colors.black54),
-      //   ),
-      // ),
-      initialRoute: WelcomeScreen.id,
-      routes: {
-        WelcomeScreen.id: (context) => const WelcomeScreen(),
-        LoginScreen.id: (context) => const LoginScreen(),
-        RegistrationScreen.id: (context) => const RegistrationScreen(),
-        ChatScreen.id: (context) => const ChatScreen(),
-      },
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<LoginCubit>(
+          create: (BuildContext context) => LoginCubit(),
+        ),
+        BlocProvider<RegisterCubit>(
+          create: (BuildContext context) => RegisterCubit(),
+        ),
+        BlocProvider<ChatCubit>(
+          create: (BuildContext context) => ChatCubit(),
+        )
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        // theme: ThemeData.dark().copyWith(
+        //   textTheme: TextTheme(
+        //     ////////body1: TextStyle(color: Colors.black54), -->body1 deprecated
+        //     bodyText1: TextStyle(color: Colors.black54),
+        //     bodyText2: TextStyle(color: Colors.black54),
+        //   ),
+        // ),
+        initialRoute: WelcomeScreen.id,
+        routes: {
+          WelcomeScreen.id: (context) => const WelcomeScreen(),
+          LoginScreen.id: (context) => LoginScreen(),
+          RegistrationScreen.id: (context) => RegistrationScreen(),
+          ChatScreen.id: (context) => const ChatScreen(),
+        },
+      ),
     );
   }
 }
