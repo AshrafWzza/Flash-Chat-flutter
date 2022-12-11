@@ -18,8 +18,7 @@ class RoundedButton extends StatelessWidget {
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           // maximumSize: const Size(50.0, 50.0),
-          elevation: 5.0,
-          primary: color,
+          elevation: 5.0, backgroundColor: color,
           padding: const EdgeInsets.all(16.0),
           // side: BorderSide(width: 5.0, color: Colors.red),
           shape:

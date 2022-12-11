@@ -1,8 +1,11 @@
 import 'package:flash_chat/components/show_alert_dialog.dart';
+import 'package:flash_chat/cubits/chat_cubit/chat_cubit.dart';
+import 'package:flash_chat/models/messsage.dart';
 import 'package:flutter/material.dart';
 import 'package:flash_chat/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 final _auth = FirebaseAuth.instance; //to get current user
 User? loggedInUser; //FirebaseUser depricated -> User
@@ -20,12 +23,14 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   final messageTextController =
       TextEditingController(); //TextField clear after sending
-  final _firestore =
-      FirebaseFirestore.instance; //XX Firestore.instance //to add data
-  final Stream<QuerySnapshot> _chatStream = FirebaseFirestore.instance
-      .collection('messages')
-      .orderBy('timestamp')
-      .snapshots(); //to get snapshot collection
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    BlocProvider.of<ChatCubit>(context).getMessages(); // * Trigger bloc
+    print(
+        'length didchanged : ${BlocProvider.of<ChatCubit>(context).messagesList.length}');
+  }
 
   String? messageText;
   @override
@@ -70,7 +75,7 @@ class _ChatScreenState extends State<ChatScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            MessageStream(chatStream: _chatStream),
+            MessageStream(),
             Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
@@ -93,12 +98,11 @@ class _ChatScreenState extends State<ChatScreen> {
                         // before new message added so it scroll to the latestbefore not the latest
                         onPressed: () async {
                           messageTextController.clear();
-                          await _firestore.collection('messages').add({
-                            'text': messageText,
-                            'sender': loggedInUser?.email,
-                            'timestamp': FieldValue.serverTimestamp(),
-                          });
                           //Auto Scroll to the new message
+
+                          BlocProvider.of<ChatCubit>(context).sendMessage(
+                              message: messageText!,
+                              email: loggedInUser!.email!);
                           setState(() {
                             scrollController.animateTo(
                               // 1.0
@@ -127,85 +131,63 @@ class _ChatScreenState extends State<ChatScreen> {
 }
 
 class MessageStream extends StatelessWidget {
-  const MessageStream({
-    Key? key,
-    required Stream<QuerySnapshot<Object?>> chatStream,
-  })  : _chatStream = chatStream,
-        super(key: key);
-
-  final Stream<QuerySnapshot<Object?>> _chatStream;
+  const MessageStream({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<QuerySnapshot>(
-      stream: _chatStream,
-      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        if (snapshot.hasError) {
-          return const Text('Something went wrong');
-        }
-
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Padding(
-            padding: EdgeInsets.all(18.0),
-            child: Center(
-              child: CircularProgressIndicator(
-                backgroundColor: Colors.lightBlueAccent,
-              ), // CircularProgress Indicator
-            ),
-          ); // Center
-        }
-        return Expanded(
-          //Error:must wrap it with Expanded --> Crash App
-          child: ListView(
-            controller: scrollController, //Auto Scroll to the new message
-            children: snapshot.data!.docs.map((DocumentSnapshot document) {
-              Map<String, dynamic> data =
-                  document.data()! as Map<String, dynamic>;
-              //print('zzzz${data['sender']}');
-              return BubbleMessage(
-                sender: data['sender'],
-                text: data['text'],
-                isMe: loggedInUser?.email == data['sender'],
-              );
-            }).toList(),
-          ),
-        );
-      },
-    );
+    return BlocBuilder<ChatCubit, ChatState>(builder: (context, state) {
+      // ! xxx BlocProvider.of<ChatCubit>(context).getMessages(); xxx trigger bloc -> infinite rebuild
+      final messageList = BlocProvider.of<ChatCubit>(context).messagesList;
+      print(
+          'length: ${BlocProvider.of<ChatCubit>(context).messagesList.length}');
+      return Expanded(
+        //Error:must wrap it with Expanded --> Crash App
+        child: ListView.builder(
+          controller: scrollController, //Auto Scroll to the new message
+          itemBuilder: (context, int index) {
+            return BubbleMessage(
+              message: messageList[index],
+            );
+          },
+          itemCount: messageList.length,
+        ),
+      );
+    });
   }
 }
 
 class BubbleMessage extends StatelessWidget {
-  final String sender;
-  final String text;
-  bool isMe;
-  BubbleMessage(
-      {Key? key, required this.sender, required this.text, required this.isMe})
-      : super(key: key);
+  Message message;
+  BubbleMessage({Key? key, required this.message}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: Column(
-        crossAxisAlignment:
-            isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+        crossAxisAlignment: message.sender == loggedInUser!.email
+            ? CrossAxisAlignment.end
+            : CrossAxisAlignment.start,
         children: [
           Text(
-            sender,
+            message.sender,
             style: const TextStyle(
               fontSize: 12.0,
               color: Colors.black54,
             ),
           ),
           Material(
-            borderRadius: isMe ? kBorderRadiusMe : kBorderRadiusNotMe,
+            borderRadius: message.sender == loggedInUser!.email
+                ? kBorderRadiusMe
+                : kBorderRadiusNotMe,
             elevation: 5.0,
-            color: isMe ? Colors.lightBlueAccent : Colors.grey, //if Sender
+            color: message.sender == loggedInUser!.email
+                ? Colors.lightBlueAccent
+                : Colors.grey, //if Sender
             child: Padding(
               padding:
                   const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
               child: Text(
-                text,
+                message.message,
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 15.0,
