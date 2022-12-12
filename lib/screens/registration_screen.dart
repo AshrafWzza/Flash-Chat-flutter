@@ -1,4 +1,4 @@
-import 'package:flash_chat/cubits/register_cubit/register_cubit.dart';
+import 'package:flash_chat/cubits/auth_cubit/auth_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flash_chat/components/rounded_button.dart';
 import 'package:flash_chat/constants.dart';
@@ -14,7 +14,7 @@ class RegistrationScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<RegisterCubit, RegisterState>(
+    return BlocConsumer<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state is RegisterSuccess) {
           Navigator.pushNamed(context, ChatScreen.id);
@@ -27,8 +27,7 @@ class RegistrationScreen extends StatelessWidget {
         return Scaffold(
           backgroundColor: Colors.white,
           body: ModalProgressHUD(
-            inAsyncCall:
-                BlocProvider.of<RegisterCubit>(context).isLoading ?? false,
+            inAsyncCall: BlocProvider.of<AuthCubit>(context).isLoading ?? false,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24.0),
               child: Column(
@@ -75,7 +74,7 @@ class RegistrationScreen extends StatelessWidget {
                   RoundedButton(
                       color: Colors.blueAccent,
                       onPressed: () async {
-                        await BlocProvider.of<RegisterCubit>(context)
+                        await BlocProvider.of<AuthCubit>(context)
                             .registerUser(email: email!, password: password!);
                       },
                       textButton: 'Register'),

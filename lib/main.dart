@@ -1,6 +1,5 @@
+import 'package:flash_chat/cubits/auth_cubit/auth_cubit.dart';
 import 'package:flash_chat/cubits/chat_cubit/chat_cubit.dart';
-import 'package:flash_chat/cubits/login_cubit/login_cubit.dart';
-import 'package:flash_chat/cubits/register_cubit/register_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flash_chat/screens/welcome_screen.dart';
 import 'package:flash_chat/screens/login_screen.dart';
@@ -25,15 +24,8 @@ class FlashChat extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<LoginCubit>(
-          create: (BuildContext context) => LoginCubit(),
-        ),
-        BlocProvider<RegisterCubit>(
-          create: (BuildContext context) => RegisterCubit(),
-        ),
-        BlocProvider<ChatCubit>(
-          create: (BuildContext context) => ChatCubit(),
-        )
+        BlocProvider<AuthCubit>(create: (BuildContext context) => AuthCubit()),
+        BlocProvider<ChatCubit>(create: (BuildContext context) => ChatCubit())
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

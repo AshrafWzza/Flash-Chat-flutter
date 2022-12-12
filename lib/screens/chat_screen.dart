@@ -4,7 +4,6 @@ import 'package:flash_chat/models/messsage.dart';
 import 'package:flutter/material.dart';
 import 'package:flash_chat/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 final _auth = FirebaseAuth.instance; //to get current user
