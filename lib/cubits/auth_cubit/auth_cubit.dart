@@ -36,10 +36,10 @@ class AuthCubit extends Cubit<AuthState> {
       emit(RegisterFailure(exception: e));
     }
   }
-
-  @override
+  // * use SimpleBlocObserver
+  /*@override
   void onChange(Change<AuthState> change) {
     super.onChange(change);
     print('****************************************************$change');
-  }
+  }*/
 }

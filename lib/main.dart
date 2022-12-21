@@ -1,6 +1,7 @@
 import 'package:flash_chat/blocs/auth_bloc.dart';
 import 'package:flash_chat/cubits/auth_cubit/auth_cubit.dart';
 import 'package:flash_chat/cubits/chat_cubit/chat_cubit.dart';
+import 'package:flash_chat/simple_bloc_observer.dart';
 import 'package:flutter/material.dart';
 import 'package:flash_chat/screens/welcome_screen.dart';
 import 'package:flash_chat/screens/login_screen.dart';
@@ -15,6 +16,7 @@ void main() async {
   // Initialize Firebase
   await Firebase.initializeApp();
   //
+  Bloc.observer = SimpleBlocObserver();
   runApp(const FlashChat());
 }
 

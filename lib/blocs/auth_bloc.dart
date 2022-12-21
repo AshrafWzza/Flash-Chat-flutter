@@ -39,9 +39,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       }
     });
   }
-  @override
+  // * use SimpleBlocObserver
+  /*@override
   void onTransition(Transition<AuthEvent, AuthState> transition) {
     super.onTransition(transition);
     print('****************************************************$transition');
-  }
+  }*/
 }
