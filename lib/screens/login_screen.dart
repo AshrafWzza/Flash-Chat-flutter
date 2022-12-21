@@ -1,10 +1,10 @@
-import 'package:flash_chat/cubits/auth_cubit/auth_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flash_chat/components/rounded_button.dart';
 import 'package:flash_chat/constants.dart';
 import 'package:flash_chat/screens/chat_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
+import '../blocs/auth_bloc.dart';
 import '../components/show_exception_alert_dialog.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -16,7 +16,7 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<AuthCubit, AuthState>(listener: (context, state) {
+    return BlocConsumer<AuthBloc, AuthState>(listener: (context, state) {
       if (state is LoginLoading) {
       } else if (state is LoginSuccess) {
         Navigator.pushNamed(context, ChatScreen.id);
@@ -30,7 +30,7 @@ class LoginScreen extends StatelessWidget {
         backgroundColor: Colors.white,
         body: SafeArea(
           child: ModalProgressHUD(
-            inAsyncCall: BlocProvider.of<AuthCubit>(context).isLoading ?? false,
+            inAsyncCall: (state is LoginLoading) ? state.isLoading : false,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24.0),
               child: Column(
@@ -72,14 +72,12 @@ class LoginScreen extends StatelessWidget {
                         hintText: 'Enter your Password.',
                         labelText: 'Password'),
                   ),
-                  const SizedBox(
-                    height: 24.0,
-                  ),
+                  const SizedBox(height: 24.0),
                   RoundedButton(
                       color: Colors.lightBlueAccent,
-                      onPressed: () async {
-                        await BlocProvider.of<AuthCubit>(context)
-                            .loginUser(email: email!, password: password!);
+                      onPressed: () {
+                        BlocProvider.of<AuthBloc>(context).add(
+                            LoginEvent(email: email!, password: password!));
                       },
                       textButton: 'Log In'),
                 ],
